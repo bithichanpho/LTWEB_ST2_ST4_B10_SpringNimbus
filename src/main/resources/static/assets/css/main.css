@@ -1,0 +1,146 @@
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap");
+
+:root {
+  --navy: #0f2f57;
+  --navy-deep: #0a2244;
+  --teal: #6fa0b0;
+  --gold: #d4a80f;
+  --ink: #1b2430;
+  --muted: #5b6877;
+  --line: #d5dde6;
+  --wash: #f2f5f8;
+  --danger: #b42318;
+  --danger-bg: #fef3f2;
+  --success: #1a7f4b;
+  --success-bg: #e7f5ee;
+}
+
+/* ---------- Trang đăng nhập ---------- */
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--ink);
+  background: var(--wash);
+}
+
+.login-wrapper {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  overflow: hidden;
+}
+
+.login-bg-shape { position: absolute; border-radius: 50%; pointer-events: none; }
+.login-bg-shape-1 { width: 520px; height: 520px; top: -180px; left: -160px; background: var(--navy); opacity: 0.09; }
+.login-bg-shape-2 { width: 420px; height: 420px; bottom: -160px; right: -120px; background: var(--teal); opacity: 0.22; }
+
+.login-card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  padding: 36px 36px 28px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-top: 6px solid var(--navy);
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(15, 47, 87, 0.10);
+}
+
+.login-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 14px;
+  font-size: 1.7rem;
+  color: #fff;
+  background: var(--navy);
+  border-radius: 50%;
+}
+.login-brand:hover { color: #fff; background: var(--navy-deep); }
+.login-brand:focus-visible { outline: 3px solid rgba(212, 168, 15, 0.7); outline-offset: 3px; }
+
+.login-subtitle { margin: 0 0 24px; text-align: center; font-size: 1.15rem; font-weight: 600; }
+
+/* Thông báo */
+.alert-custom {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  font-size: 0.92rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+.alert-custom-icon { flex: none; margin-top: 2px; }
+.alert-custom-content { min-width: 0; }
+.alert-custom-danger { color: var(--danger); background: var(--danger-bg); border-color: #f4c7c3; }
+.alert-custom-success { color: var(--success); background: var(--success-bg); border-color: #b9e0cc; }
+
+/* Ô nhập */
+.login-form-group { margin-bottom: 18px; }
+.login-form-label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.92rem; }
+.login-input-group { position: relative; }
+.login-input-group .input-icon {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+}
+.login-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px 0 42px;
+  font: inherit;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.login-input::placeholder { color: #98a4b3; }
+.login-input:hover { border-color: #b3c0cf; }
+.login-input:focus { outline: 3px solid rgba(212, 168, 15, 0.45); border-color: var(--navy); }
+.login-input:focus ~ .input-icon,
+.login-input-group:focus-within .input-icon { color: var(--navy); }
+
+/* Nút đăng nhập */
+.btn-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 48px;
+  margin-top: 8px;
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: var(--navy);
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn-login:hover { background: var(--navy-deep); }
+.btn-login:focus-visible { outline: 3px solid rgba(212, 168, 15, 0.7); outline-offset: 2px; }
+.btn-login:disabled { opacity: 0.65; cursor: progress; }
+.btn-login .bi { transition: transform 0.15s ease; }
+.btn-login:hover:not(:disabled) .bi { transform: translateX(3px); }
+
+.login-footer-text { margin: 22px 0 0; text-align: center; font-size: 0.9rem; }
+.login-footer-text a { color: var(--navy); text-decoration: none; }
+.login-footer-text a:hover { text-decoration: underline; }
+
+@media (max-width: 480px) {
+  .login-card { padding: 28px 20px 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}

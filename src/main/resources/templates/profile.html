@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hồ sơ - Bài tập JWT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body class="profile-body">
+<header class="topbar">
+    <span class="brand">Bài tập JWT - Spring Boot 3</span>
+    <button id="logout" type="button" class="btn-ghost">Đăng xuất</button>
+</header>
+
+<main class="profile-page">
+    <section class="identity" aria-live="polite">
+        <img id="images" src="/images/avatar.svg" alt="Ảnh đại diện">
+        <div class="identity-text">
+            <h1 id="profile">Đang tải thông tin...</h1>
+            <p id="userEmail" class="mail"></p>
+        </div>
+        <span class="badge">Đã xác thực bằng JWT</span>
+    </section>
+
+    <section class="card lifetime" aria-labelledby="lifeTitle">
+        <h2 id="lifeTitle">Thời hạn của token</h2>
+        <p class="remaining" id="remaining">-</p>
+        <div class="bar" role="progressbar" aria-labelledby="lifeTitle" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="bar-fill" id="barFill"></div>
+        </div>
+        <dl class="times">
+            <div><dt>Phát hành (iat)</dt><dd id="tokenIat">-</dd></div>
+            <div><dt>Hết hạn (exp)</dt><dd id="tokenExp">-</dd></div>
+        </dl>
+    </section>
+
+    <section class="card anatomy" aria-labelledby="anatomyTitle">
+        <h2 id="anatomyTitle">Cấu trúc của token</h2>
+        <p class="note">Token gồm ba phần ngăn cách bởi dấu chấm: header, payload và signature.</p>
+        <p class="jwt-raw" id="rawToken"></p>
+
+        <div class="parts">
+            <article class="part part-header">
+                <h3>Header</h3>
+                <pre id="partHeader">-</pre>
+            </article>
+            <article class="part part-payload">
+                <h3>Payload</h3>
+                <pre id="partPayload">-</pre>
+            </article>
+            <article class="part part-sig">
+                <h3>Signature</h3>
+                <p>Được tạo từ header, payload và secret key. Chỉ máy chủ giữ secret key nên mới kiểm tra được chữ ký.</p>
+            </article>
+        </div>
+    </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="/js/mainjs.js"></script>
+</body>
+</html>

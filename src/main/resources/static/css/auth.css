@@ -1,0 +1,130 @@
+:root {
+  --navy: #0f2f57;
+  --navy-deep: #0a2244;
+  --teal: #6fa0b0;
+  --gold: #d4a80f;
+  --ink: #1b2430;
+  --muted: #5b6877;
+  --line: #d5dde6;
+  --paper: #ffffff;
+  --wash: #f2f5f8;
+  --danger: #b42318;
+  --danger-bg: #fef3f2;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--ink);
+  background: var(--wash);
+  line-height: 1.55;
+}
+
+/* ---------- Trang hồ sơ ---------- */
+.profile-body { --hdr: #b42318; --pay: #1a7f4b; --sig: #1f5fbf; }
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 32px;
+  color: #fff;
+  background: var(--navy);
+  border-bottom: 4px solid var(--teal);
+}
+.topbar .brand { font-weight: 600; }
+.btn-ghost {
+  height: 38px;
+  padding: 0 18px;
+  white-space: nowrap;
+  font: inherit;
+  font-size: 0.92rem;
+  color: #fff;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.btn-ghost:hover { background: rgba(255, 255, 255, 0.12); }
+.btn-ghost:focus-visible { outline: 3px solid rgba(212, 168, 15, 0.8); outline-offset: 2px; }
+
+.profile-page { max-width: 880px; margin: 0 auto; padding: 32px 20px 56px; display: grid; gap: 20px; }
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 28px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.identity img { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; background: #e9ecef; border: 3px solid var(--teal); flex: none; }
+.identity-text { min-width: 0; flex: 1; }
+.identity h1 { margin: 0; font-size: 1.6rem; line-height: 1.25; }
+.identity .mail { margin: 4px 0 0; color: var(--muted); overflow-wrap: anywhere; }
+.badge {
+  flex: none;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--pay);
+  background: #e7f5ee;
+  border: 1px solid #b9e0cc;
+  border-radius: 999px;
+}
+
+.card { padding: 24px 28px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; }
+.card h2 { margin: 0 0 4px; font-size: 1.1rem; }
+.card .note { margin: 0 0 16px; color: var(--muted); font-size: 0.92rem; }
+
+.remaining { margin: 8px 0 14px; font-size: 1.9rem; font-weight: 700; color: var(--navy); }
+.remaining.low { color: var(--danger); }
+.bar { height: 10px; background: #e3e9ef; border-radius: 999px; overflow: hidden; }
+.bar-fill { height: 100%; width: 0; background: var(--teal); border-radius: 999px; transition: width 1s linear; }
+.bar-fill.low { background: var(--danger); }
+.times { margin: 16px 0 0; display: flex; flex-wrap: wrap; gap: 8px 40px; }
+.times dt { font-size: 0.85rem; color: var(--muted); }
+.times dd { margin: 0; font-weight: 600; }
+
+.jwt-raw {
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  word-break: break-all;
+  background: var(--wash);
+  border-radius: 6px;
+}
+.jwt-raw .h { color: var(--hdr); }
+.jwt-raw .p { color: var(--pay); }
+.jwt-raw .s { color: var(--sig); }
+
+.parts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.part { padding: 14px 16px; background: var(--paper); border: 1px solid var(--line); border-top-width: 4px; border-radius: 6px; min-width: 0; }
+.part h3 { margin: 0 0 8px; font-size: 0.95rem; }
+.part pre { margin: 0; font-family: ui-monospace, Consolas, monospace; font-size: 0.8rem; white-space: pre-wrap; word-break: break-all; }
+.part p { margin: 0; font-size: 0.88rem; color: var(--muted); }
+.part-header { border-top-color: var(--hdr); }
+.part-header h3 { color: var(--hdr); }
+.part-payload { border-top-color: var(--pay); }
+.part-payload h3 { color: var(--pay); }
+.part-sig { border-top-color: var(--sig); }
+.part-sig h3 { color: var(--sig); }
+
+@media (max-width: 720px) {
+  .topbar { padding: 12px 16px; }
+  .identity { flex-wrap: wrap; padding: 20px; }
+  .badge { order: 3; }
+  .card { padding: 20px; }
+  .parts { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
