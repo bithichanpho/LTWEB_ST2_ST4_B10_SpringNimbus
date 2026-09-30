@@ -20,3 +20,6 @@ target/
 
 ### VS Code ###
 .vscode/
+
+### Spring Boot configuration ###
+src/main/resources/application.properties
