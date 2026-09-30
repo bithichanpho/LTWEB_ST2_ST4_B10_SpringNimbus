@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -42,6 +43,7 @@ public class User implements UserDetails {
 	@Column(columnDefinition = "nvarchar(500)", nullable = false)
 	private String images;
 
+	@JsonIgnore
 	@Column(nullable = false)
 	private String password;
 

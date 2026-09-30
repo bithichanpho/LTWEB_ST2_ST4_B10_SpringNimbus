@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -42,10 +41,7 @@ public class SecurityConfiguration {
 						.requestMatchers("/auth/**").permitAll()
 						.requestMatchers("/login**").permitAll()
 						.requestMatchers("/user/**").permitAll()
-						.requestMatchers(new AntPathRequestMatcher("/images/**")).permitAll()
-						.requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
-						.requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
-						.requestMatchers(new AntPathRequestMatcher("/assets/**")).permitAll()
+						.requestMatchers("/images/**", "/js/**", "/assets/**").permitAll()
 						.anyRequest()
 						.authenticated())
 				.sessionManagement(management -> management

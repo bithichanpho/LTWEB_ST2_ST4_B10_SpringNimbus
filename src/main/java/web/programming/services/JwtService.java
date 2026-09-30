@@ -1,19 +1,31 @@
 package web.programming.services;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
+import java.text.ParseException;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
+
+import web.programming.exceptions.JwtExpiredException;
+import web.programming.exceptions.JwtMalformedException;
+import web.programming.exceptions.JwtSignatureException;
+
+/**
+ * Tạo và xác thực JWT (HS256) bằng thư viện Nimbus JOSE + JWT.
+ */
 @Service
 public class JwtService {
 
@@ -24,11 +36,11 @@ public class JwtService {
 	private long jwtExpiration;
 
 	public String extractUsername(String token) {
-		return extractClaim(token, Claims::getSubject);
+		return extractClaim(token, JWTClaimsSet::getSubject);
 	}
 
-	public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-		final Claims claims = extractAllClaims(token);
+	public <T> T extractClaim(String token, Function<JWTClaimsSet, T> claimsResolver) {
+		final JWTClaimsSet claims = extractAllClaims(token);
 		return claimsResolver.apply(claims);
 	}
 
@@ -49,14 +61,24 @@ public class JwtService {
 			UserDetails userDetails,
 			long expiration
 	) {
-		return Jwts.builder()
-				.claims(extraClaims)
-				.subject(userDetails.getUsername())
-				.issuedAt(new Date(System.currentTimeMillis()))
+		final long now = System.currentTimeMillis();
+
+		JWTClaimsSet.Builder claims = new JWTClaimsSet.Builder();
+		extraClaims.forEach(claims::claim);
+		claims.subject(userDetails.getUsername())
+				.issueTime(new Date(now))
 				// hết hạn sau "expiration" ms (security.jwt.expiration-time trong application.properties)
-				.expiration(new Date(System.currentTimeMillis() + expiration))
-				.signWith(getSignInKey(), Jwts.SIG.HS256)
-				.compact();
+				.expirationTime(new Date(now + expiration));
+
+		SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claims.build());
+
+		try {
+			signedJWT.sign(new MACSigner(getSignInKey()));
+		} catch (JOSEException e) {
+			throw new IllegalStateException("Không thể ký JWT", e);
+		}
+
+		return signedJWT.serialize();
 	}
 
 	public boolean isTokenValid(String token, UserDetails userDetails) {
@@ -69,21 +91,43 @@ public class JwtService {
 	}
 
 	private Date extractExpiration(String token) {
-		return extractClaim(token, Claims::getExpiration);
+		return extractClaim(token, JWTClaimsSet::getExpirationTime);
 	}
 
-	private Claims extractAllClaims(String token) {
-		return Jwts
-				.parser()
-				.verifyWith(getSignInKey())
-				.build()
-				.parseSignedClaims(token)
-				.getPayload();
+	/**
+	 * Parse token, kiểm tra thuật toán + chữ ký + thời hạn rồi trả về các claim.
+	 */
+	private JWTClaimsSet extractAllClaims(String token) {
+		try {
+			SignedJWT signedJWT = SignedJWT.parse(token);
+
+			// Chỉ chấp nhận HS256 (chặn alg=none hoặc đổi thuật toán)
+			if (!JWSAlgorithm.HS256.equals(signedJWT.getHeader().getAlgorithm())) {
+				throw new JwtSignatureException("Unsupported JWT algorithm");
+			}
+
+			if (!signedJWT.verify(new MACVerifier(getSignInKey()))) {
+				throw new JwtSignatureException("JWT signature does not match locally computed signature");
+			}
+
+			JWTClaimsSet claims = signedJWT.getJWTClaimsSet();
+
+			Date exp = claims.getExpirationTime();
+			if (exp == null || exp.before(new Date())) {
+				throw new JwtExpiredException("JWT expired at " + exp);
+			}
+
+			return claims;
+		} catch (ParseException e) {
+			throw new JwtMalformedException("Malformed JWT", e);
+		} catch (JOSEException e) {
+			throw new JwtSignatureException("Cannot verify JWT signature: " + e.getMessage());
+		}
 	}
 
-	private SecretKey getSignInKey() {
-		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-		return Keys.hmacShaKeyFor(keyBytes);
+	private byte[] getSignInKey() {
+		// Giữ nguyên cách giải mã Base64 như bản cũ để token/khóa cũ vẫn dùng được
+		return Base64.getDecoder().decode(secretKey);
 	}
 
 }
